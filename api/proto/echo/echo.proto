@@ -1,0 +1,26 @@
+syntax = "proto3";
+package echo;
+
+option go_package = "api/proto/echo";
+
+import "google/api/annotations.proto";
+
+// The Echo API service definition.
+service API {
+  // Sends a greeting
+  rpc Get (GetRequest) returns (GetResponse) {
+    option (google.api.http) = {
+      get: "/echo",
+    };
+  }
+}
+
+// The request containing the message.
+message GetRequest {
+  string message = 1;
+}
+
+// The response containing the echoed message.
+message GetResponse {
+  string echo = 1;
+}
