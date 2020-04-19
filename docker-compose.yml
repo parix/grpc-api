@@ -6,13 +6,31 @@ services:
       target: dev
     volumes:
       - .:/go/src/github.com/parix/grpc-api
-  gateway:
+  envoy:
     build:
       context: .
-      target: gateway
+      target: envoy
+    volumes:
+      - ./front-envoy.yaml:/etc/front-envoy.yaml
+      - ./api/proto/echo/echo.pb:/tmp/envoy/echo.pb
+    networks:
+      - envoymesh
+    expose:
+      - "80"
+      - "8001"
     ports:
-      - 8081:8081
+      - "8000:80"
+      - "8001:8001"
   server:
     build:
       context: .
       target: server
+    networks:
+      envoymesh:
+        aliases:
+          - server
+    environment:
+      - GRPC_VERBOSITY=debug
+
+networks:
+  envoymesh: {}
