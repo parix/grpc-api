@@ -1,13 +1,14 @@
-proto:
-	protoc -I/usr/local/include -I. \
+go:
+	protoc -I /usr/local/include -I. \
 		-I ${GOPATH}/src \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I third_party/googleapis \
 		--go_out=plugins=grpc:. \
 		api/proto/echo/echo.proto
 
-gateway:
-	protoc -I/usr/local/include -I. \
+descriptor:
+	protoc -I /usr/local/include -I. \
 		-I ${GOPATH}/src \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--grpc-gateway_out=logtostderr=true:. \
+		-I third_party/googleapis \
+		--include_imports \
+		--descriptor_set_out=api/proto/echo/echo.pb \
 		api/proto/echo/echo.proto
