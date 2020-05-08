@@ -1,6 +1,6 @@
 FROM golang as base
 RUN apt-get update
-ADD . /go/src/github.com/parix/grpc-api
+COPY . /go/src/github.com/parix/grpc-api
 
 FROM base as dev
 RUN apt-get install -y unzip
@@ -16,6 +16,8 @@ FROM base as server
 RUN go install github.com/parix/grpc-api/api/server
 ENTRYPOINT ["/go/bin/server"]
 
-FROM envoyproxy/envoy-dev:latest as envoy 
+FROM envoyproxy/envoy-dev:latest as gateway 
 RUN apt-get update && apt-get -q install -y curl
+COPY front-envoy.yaml /etc/front-envoy.yaml 
+COPY api/proto/echo/echo.pb /tmp/envoy/echo.pb
 CMD /usr/local/bin/envoy -c /etc/front-envoy.yaml --service-cluster front-proxy

@@ -6,10 +6,10 @@ services:
       target: dev
     volumes:
       - .:/go/src/github.com/parix/grpc-api
-  envoy:
+  gateway:
     build:
       context: .
-      target: envoy
+      target: gateway
     volumes:
       - ./front-envoy.yaml:/etc/front-envoy.yaml
       - ./api/proto/echo/echo.pb:/tmp/envoy/echo.pb
@@ -29,6 +29,8 @@ services:
       envoymesh:
         aliases:
           - server
+    expose:
+      - "9090"
     environment:
       - GRPC_VERBOSITY=debug
 
