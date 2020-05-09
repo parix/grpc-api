@@ -9,10 +9,14 @@ spec:
   selector:
     matchLabels:
       app: gateway
+      public-access: allow
+      echo-api-access: allow
   template:
     metadata:
       labels:
         app: gateway
+        public-access: allow
+        echo-api-access: allow
     spec:
       containers:
       - image: parix/echo-gateway

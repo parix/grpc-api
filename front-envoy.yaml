@@ -38,5 +38,5 @@ static_resources:
     http2_protocol_options: {}
     hosts:
     - socket_address:
-        address: server 
+        address: echo-api
         port_value: 9090 

@@ -1,0 +1,12 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: public-access
+spec:
+  podSelector:
+    matchLabels:
+      public-access: allow 
+  policyTypes:
+  - Ingress
+  ingress:
+  - {}

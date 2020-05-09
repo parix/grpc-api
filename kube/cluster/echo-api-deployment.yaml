@@ -2,21 +2,21 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   labels:
-    app: server
-  name: server
+    app: echo-api 
+  name: echo-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: server
+      app: echo-api
   template:
     metadata:
       labels:
-        app: server
+        app: echo-api
     spec:
       containers:
       - image: parix/echo-server
-        name: echo-server
+        name: echo-api
         ports:
         - containerPort: 9090
       restartPolicy: Always
