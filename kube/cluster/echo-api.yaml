@@ -1,3 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: echo-api
+  name: echo-api
+spec:
+  ports:
+  - name: rpc
+    port: 9090
+    targetPort: 9090
+  selector:
+    app: echo-api
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:

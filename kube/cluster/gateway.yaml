@@ -1,3 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: gateway
+  name: gateway
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app: gateway
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:

@@ -1,9 +1,21 @@
+#### Minikube
+```
+$ brew install minikube
+$ minikube start --cni=cilium --memory=4096
+```
+
 #### Deploy
 ```
-$ kubectl --kubeconfig kubeconfig.yml apply -f cluster/.
+$ kubectl create ns grpc-api
+$ kubectl -n grpc-api apply -f cluster/.
+```
+
+### Tunnel
+```
+$ minikube service gateway -n grpc-api
 ```
 
 ### Delete
 ```
-kubectl --kubeconfig kubeconfig.yml delete service,deployment,networkpolicy,pods
+kubectl delete ns grpc-api
 ```

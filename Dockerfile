@@ -16,8 +16,9 @@ FROM base as server
 RUN go install github.com/parix/grpc-api/api/server
 ENTRYPOINT ["/go/bin/server"]
 
-FROM envoyproxy/envoy-dev:latest as gateway 
+FROM envoyproxy/envoy:v1.16.0 as gateway 
 RUN apt-get update && apt-get -q install -y curl
 COPY front-envoy.yaml /etc/front-envoy.yaml 
 COPY api/proto/echo/echo.pb /tmp/envoy/echo.pb
+ENV ENVOY_UID=0
 CMD /usr/local/bin/envoy -c /etc/front-envoy.yaml --service-cluster front-proxy

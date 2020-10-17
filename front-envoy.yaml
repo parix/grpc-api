@@ -5,7 +5,7 @@ static_resources:
       socket_address: { address: 0.0.0.0, port_value: 80 }
     filter_chains:
     - filters:
-      - name: envoy.http_connection_manager
+      - name: envoy.filters.network.http_connection_manager
         config:
           stat_prefix: grpc_json
           codec_type: AUTO
@@ -16,10 +16,18 @@ static_resources:
               domains: ["*"]
               routes:
               - match: { prefix: "/echo" }
-                route: { cluster: echo, timeout: { seconds: 60 } } 
+                route: { cluster: echo, max_grpc_timeout: 60s } 
+              cors:
+                allow_origin_string_match:
+                - prefix: "*"
+                allow_methods: GET, PUT, DELETE, POST, OPTIONS
+                allow_headers: keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web,grpc-timeout
+                max_age: "1728000"
+                expose_headers: grpc-status,grpc-message
           http_filters:                                                         
-          - name: envoy.grpc_json_transcoder
-            config:
+          - name: envoy.filters.http.grpc_json_transcoder
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
               proto_descriptor: "/tmp/envoy/echo.pb"
               services: ["echo.API"]
               print_options:
@@ -27,14 +35,14 @@ static_resources:
                 always_print_primitive_fields: true
                 always_print_enums_as_ints: false
                 preserve_proto_field_names: false
-          - name: envoy.router
+          - name: envoy.filters.http.cors
+          - name: envoy.filters.http.router
 
   clusters:
   - name: echo
     connect_timeout: 1.25s
     type: logical_dns
     lb_policy: round_robin
-    dns_lookup_family: V4_ONLY
     http2_protocol_options: {}
     hosts:
     - socket_address:
