@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: gateway
+  name: gateway
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app: gateway
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: gateway
+  name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+      public-access: allow
+      echo-api-access: allow
+  template:
+    metadata:
+      labels:
+        app: gateway
+        public-access: allow
+        echo-api-access: allow
+    spec:
+      containers:
+      - image: parix/echo-gateway
+        name: echo-gateway
+        ports:
+        - containerPort: 80
+      restartPolicy: Always

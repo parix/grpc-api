@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  gateway:
+    image: parix/echo-gateway
+    container_name: echo-gateway
+    restart: always
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    labels:
+      kompose.service.type: LoadBalancer
+
+  server:
+    image: parix/echo-server
+    container_name: echo-server
+    restart: always
+    ports:
+      - "9090"

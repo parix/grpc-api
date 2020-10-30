@@ -1,18 +1,15 @@
 version: '3.4'
 services:
-  dev:
+  #dev:
+  #  build:
+  #    context: .
+  #    target: dev
+  #  volumes:
+  #    - .:/go/src/github.com/parix/grpc-api
+  gateway:
     build:
       context: .
-      target: dev
-    volumes:
-      - .:/go/src/github.com/parix/grpc-api
-  envoy:
-    build:
-      context: .
-      target: envoy
-    volumes:
-      - ./front-envoy.yaml:/etc/front-envoy.yaml
-      - ./api/proto/echo/echo.pb:/tmp/envoy/echo.pb
+      target: gateway
     networks:
       - envoymesh
     expose:
@@ -28,7 +25,9 @@ services:
     networks:
       envoymesh:
         aliases:
-          - server
+          - echo-api
+    expose:
+      - "9090"
     environment:
       - GRPC_VERBOSITY=debug
 
