@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"context"
@@ -13,15 +13,19 @@ const (
 	port = ":9090"
 )
 
-// server is used to implement echo.APIServer.
-type server struct {
+// Server is used to implement echo.APIServer.
+type Server struct {
 	pb.UnimplementedAPIServer
 }
 
+func NewServer() *Server {
+  return &Server{}
+}
+
 // SayHello implements hello.APIServer
-func (s *server) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, error) {
+func (s *Server) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, error) {
 	log.Printf("Received: %v", req.GetMessage())
-	return &pb.GetResponse{Echo: req.GetMessage()}, nil
+  return &pb.GetResponse{Echo: req.GetMessage()}, nil
 }
 
 func main() {
@@ -30,7 +34,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterAPIServer(s, &server{})
+	pb.RegisterAPIServer(s, NewServer())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
