@@ -1,4 +1,4 @@
-FROM golang as base
+FROM --platform=linux/x86_64 golang as base
 RUN apt-get update
 ADD . /go/src/github.com/parix/grpc-api
 
